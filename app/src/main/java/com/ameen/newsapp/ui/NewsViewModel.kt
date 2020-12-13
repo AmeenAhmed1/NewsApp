@@ -3,6 +3,7 @@ package com.ameen.newsapp.ui
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ameen.newsapp.data.model.Article
 import com.ameen.newsapp.data.model.NewsResponse
 import com.ameen.newsapp.repository.NewsRepository
 import com.ameen.newsapp.util.ResponseWrapper
@@ -52,4 +53,14 @@ class NewsViewModel(
         }
         return ResponseWrapper.Error(message = response.message())
     }
+
+    fun saveArticle(article: Article) = viewModelScope.launch {
+        newsRepository.saveRoomArticle(article)
+    }
+
+    fun deleteArticle(article: Article) = viewModelScope.launch {
+        newsRepository.deleteRoomArticle(article)
+    }
+
+    fun getAllSavedArticles() = newsRepository.getAllSavedRoomArticle()
 }
