@@ -3,4 +3,5 @@
     <string name="braking_news">Braking News</string>
     <string name="favourite">Favourite</string>
     <string name="search_news">Search News</string>
+    <string name="search">Search...</string>
 </resources>

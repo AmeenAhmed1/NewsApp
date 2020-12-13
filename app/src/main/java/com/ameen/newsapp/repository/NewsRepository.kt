@@ -11,4 +11,7 @@ class NewsRepository(
     suspend fun getBreakingNews(countryCode: String, pageNumber: Int) =
         ApiSettings.apiInstance.getBreakingNews(countryCode, pageNumber)
 
+    suspend fun searchNews(searchQuery: String, pageNumber: Int) =
+        ApiSettings.apiInstance.searchNews(searchQuery, pageNumber)
+
 }
