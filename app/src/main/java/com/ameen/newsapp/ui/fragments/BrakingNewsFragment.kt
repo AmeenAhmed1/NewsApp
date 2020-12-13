@@ -5,8 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ameen.newsapp.R
 import com.ameen.newsapp.adapter.NewsAdapter
@@ -28,6 +30,16 @@ class BrakingNewsFragment : Fragment(R.layout.fragment_braking_news) {
         viewModel = (activity as MainActivity).viewModel
 
         setNewsRecycler()
+
+        newsAdapter.onItemClicked {
+            val bundle = Bundle()
+            bundle.putSerializable("selectedArticle", it)
+
+            findNavController().navigate(
+                R.id.action_brakingNewsFragment_to_articleFragment,
+                bundle
+            )
+        }
 
         viewModel.breakingNews.observe(viewLifecycleOwner, Observer {
             when (it) {

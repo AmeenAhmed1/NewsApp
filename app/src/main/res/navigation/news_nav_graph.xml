@@ -15,7 +15,11 @@
     <fragment
         android:id="@+id/articleFragment"
         android:name="com.ameen.newsapp.ui.fragments.ArticleFragment"
-        android:label="ArticleFragment" />
+        android:label="ArticleFragment" >
+        <argument
+            android:name="selectedArticle"
+            app:argType="com.ameen.newsapp.data.model.Article" />
+    </fragment>
     <fragment
         android:id="@+id/savedNewsFragment"
         android:name="com.ameen.newsapp.ui.fragments.SavedNewsFragment"
