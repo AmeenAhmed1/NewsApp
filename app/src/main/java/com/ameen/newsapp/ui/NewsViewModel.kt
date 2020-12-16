@@ -15,7 +15,8 @@ class NewsViewModel(
 ) : ViewModel() {
 
     val breakingNews: MutableLiveData<ResponseWrapper<NewsResponse>> = MutableLiveData()
-    val breakingNewsPage = 1
+    var breakingNewsPage = 1
+    var breakingNewsResponse: NewsResponse? = null
 
     val searchNews: MutableLiveData<ResponseWrapper<NewsResponse>> = MutableLiveData()
     val searchNewsPage = 1
@@ -32,14 +33,21 @@ class NewsViewModel(
 
     fun searchNews(searchQuery: String) = viewModelScope.launch {
         searchNews.postValue(ResponseWrapper.Loading())
-        val response =  newsRepository.searchNews(searchQuery, searchNewsPage)
+        val response = newsRepository.searchNews(searchQuery, searchNewsPage)
         searchNews.postValue(handleSearchNewsResponse(response))
     }
 
     private fun handleBreakingNewsResponse(response: Response<NewsResponse>): ResponseWrapper<NewsResponse> {
         if (response.isSuccessful) {
+            breakingNewsPage++ //increase the page number every call
             response.body()?.let {
-                return ResponseWrapper.Success(it)
+                if (breakingNewsResponse == null) breakingNewsResponse = it
+                else {
+                    val oldArticles = breakingNewsResponse?.articles
+                    val newArticles = it.articles
+                    oldArticles?.addAll(newArticles)
+                }
+                return ResponseWrapper.Success(breakingNewsResponse ?: it)
             }
         }
         return ResponseWrapper.Error(message = response.message())
