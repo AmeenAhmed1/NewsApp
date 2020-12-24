@@ -19,7 +19,8 @@ class NewsViewModel(
     var breakingNewsResponse: NewsResponse? = null
 
     val searchNews: MutableLiveData<ResponseWrapper<NewsResponse>> = MutableLiveData()
-    val searchNewsPage = 1
+    var searchNewsPage = 1
+    var searchNewsResponse: NewsResponse? = null
 
     init {
         getBreakingNews("us")
@@ -55,8 +56,15 @@ class NewsViewModel(
 
     private fun handleSearchNewsResponse(response: Response<NewsResponse>): ResponseWrapper<NewsResponse> {
         if (response.isSuccessful) {
+            searchNewsPage++
             response.body()?.let {
-                return ResponseWrapper.Success(it)
+                if(searchNewsResponse == null) searchNewsResponse = it
+                else{
+                    val oldSearchArticle = searchNewsResponse?.articles
+                    val newSearchArticle = it.articles
+                    oldSearchArticle?.addAll(newSearchArticle)
+                }
+                return ResponseWrapper.Success(breakingNewsResponse ?: it)
             }
         }
         return ResponseWrapper.Error(message = response.message())
