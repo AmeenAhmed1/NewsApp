@@ -2,7 +2,9 @@ package com.ameen.newsapp.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -10,12 +12,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ameen.newsapp.R
 import com.ameen.newsapp.adapter.NewsAdapter
+import com.ameen.newsapp.databinding.FragmentSearchNewsBinding
 import com.ameen.newsapp.ui.MainActivity
 import com.ameen.newsapp.ui.NewsViewModel
 import com.ameen.newsapp.util.ResponseWrapper
-import kotlinx.android.synthetic.main.fragment_braking_news.*
-import kotlinx.android.synthetic.main.fragment_search_news.*
-import kotlinx.android.synthetic.main.fragment_search_news.paginationProgressBar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -28,6 +28,21 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     lateinit var viewModel: NewsViewModel
     lateinit var newsAdapter: NewsAdapter
 
+    private var _binding: FragmentSearchNewsBinding? = null
+    private val binding get() = _binding!!
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentSearchNewsBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -36,7 +51,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
 
         newsAdapter.onItemClicked {
             val bundle = Bundle()
-            bundle.putSerializable("article", it)
+            bundle.putSerializable("selectedArticle", it)
 
             findNavController().navigate(
                 R.id.action_searchNewsFragment_to_articleFragment,
@@ -45,7 +60,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         }
 
         var job: Job? = null
-        etSearch.addTextChangedListener {
+        binding.etSearch.addTextChangedListener {
             job?.cancel()
             job = MainScope().launch {
                 delay(500L)
@@ -79,13 +94,13 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     }
 
     private fun isProgressbarActive(state: Boolean) {
-        if (state) paginationProgressBar.visibility = View.VISIBLE
-        else paginationProgressBar.visibility = View.INVISIBLE
+        if (state) binding.paginationProgressBar.visibility = View.VISIBLE
+        else binding.paginationProgressBar.visibility = View.INVISIBLE
     }
 
     private fun setRecycler() {
         newsAdapter = NewsAdapter()
-        rvSearchNews?.apply {
+        binding.rvSearchNews?.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
         }

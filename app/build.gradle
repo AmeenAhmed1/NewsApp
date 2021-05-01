@@ -26,6 +26,10 @@ android {
         archivesBaseName = "${applicationId}-v${versionName}(${versionCode})"
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     buildTypes {
 
         debug{
