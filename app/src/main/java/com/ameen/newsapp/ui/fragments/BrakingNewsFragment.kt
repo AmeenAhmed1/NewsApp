@@ -44,6 +44,8 @@ class BrakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        _binding = FragmentBreakingNewsBinding.bind(view)
+
         viewModel = (activity as MainActivity).viewModel
 
         setNewsRecycler()
